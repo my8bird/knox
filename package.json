@@ -1,13 +1,18 @@
 {
-  "name": "knox",
+  "name": "knox-latest",
   "description": "Amazon S3 client",
   "keywords": ["aws", "amazon", "s3"],
   "version": "0.0.9",
-  "author": "TJ Holowaychuk <tj@learnboost.com>",
+  "author": "Nathan Landis <my8bird@gmail.com>",
   "main": "./index.js",
-  "engines": { "node": ">= 0.2.0" },
+  "engines": { "node": ">= 0.6.0" },
+
+  "devDependencies": {
+    "expresso": ""
+  },
+
   "repository": {
     "type": "git",
-    "url": "git://github.com/LearnBoost/knox.git"
+    "url": "git://github.com/my8bird/knox.git"
   }
 }
