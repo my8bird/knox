@@ -53,7 +53,7 @@ describe('Knox', function () {
     done();
   })
   
-  it('test .createClient() valid', function(done) {
+  it('.createClient() valid', function(done) {
     var client = knox.createClient({
         key: 'foobar'
       , secret: 'baz'
@@ -67,7 +67,7 @@ describe('Knox', function () {
     done();
   })
   
-  it('test .createClient() custom endpoint', function(done) {
+  it('.createClient() custom endpoint', function(done) {
     var client = knox.createClient({
         key: 'foobar'
       , secret: 'baz'
@@ -79,7 +79,7 @@ describe('Knox', function () {
     done();
   })
 
-  it('test .putFile()', function(done) {
+  it('.putFile()', function(done) {
     var n = 0;
     client.putFile(jsonFixture, '/test/user2.json', function(err, res) {
       assert.ok(!err, 'putFile() got an error!');
@@ -92,7 +92,7 @@ describe('Knox', function () {
     });
   })
   
-  it('test .put()', function(done) {
+  it('.put()', function(done) {
     var n = 0;
     fs.stat(jsonFixture, function(err, stat){
       if (err) throw err;
@@ -118,7 +118,7 @@ describe('Knox', function () {
     });
   })
   
-  it('test .putStream()', function(done) {
+  it('.putStream()', function(done) {
     var stream = fs.createReadStream(jsonFixture);
     client.putStream(stream, '/test/user.json', function(err, res){
       assert.ok(!err);
@@ -127,7 +127,7 @@ describe('Knox', function () {
     });
   })
   
-  it('test .getFile()', function(done) {
+  it('.getFile()', function(done) {
     client.getFile('/test/user.json', function(err, res){
       assert.ok(!err);
       assert.equal(200, res.statusCode);
@@ -137,7 +137,7 @@ describe('Knox', function () {
     });
   })
   
-  it('test .get()', function(done) {
+  it('.get()', function(done) {
     client.get('/test/user.json').on('response', function(res){
       assert.equal(200, res.statusCode);
       assert.equal('application/json', res.headers['content-type'])
@@ -146,7 +146,7 @@ describe('Knox', function () {
     }).end();
   })
 
-  it('test .head()', function(done) {
+  it('.head()', function(done) {
     client.head('/test/user.json').on('response', function(res){
       assert.equal(200, res.statusCode);
       assert.equal('application/json', res.headers['content-type'])
@@ -155,7 +155,7 @@ describe('Knox', function () {
     }).end();
   })
   
-  it('test .headFile()', function(done) {
+  it('.headFile()', function(done) {
     client.headFile('/test/user.json', function(err, res){
       assert.ok(!err);
       assert.equal(200, res.statusCode);
@@ -165,14 +165,14 @@ describe('Knox', function () {
     });
   })
   
-  it('test .del()', function(done) {
+  it('.del()', function(done) {
     client.del('/test/user.json').on('response', function(res){
       assert.equal(204, res.statusCode);
       done();
     }).end();
   })
   
-  it('test .deleteFile()', function(done) {
+  it('.deleteFile()', function(done) {
     client.deleteFile('/test/user2.json', function(err, res){
       assert.ok(!err);
       assert.equal(204, res.statusCode);
@@ -180,14 +180,14 @@ describe('Knox', function () {
     });
   })
   
-  it('test .get() 404', function(done) {
+  it('.get() 404', function(done) {
     client.get('/test/user.json').on('response', function(res){
       assert.equal(404, res.statusCode);
       done();
     }).end();
   })
   
-  it('test .head() 404', function(done) {
+  it('.head() 404', function(done) {
     client.head('/test/user.json').on('response', function(res){
       assert.equal(404, res.statusCode);
       done();
