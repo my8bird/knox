@@ -3,26 +3,30 @@
  * Module dependencies.
  */
 
-var knox = require('../index.js')
-  , fs = require('fs');
+var knox = require('../index.js'),
+    fs   = require('fs'),
+    path = require('path'),
+    assert = require('assert');
 
 try {
-  var auth = JSON.parse(fs.readFileSync('auth', 'ascii'));
+  var auth = JSON.parse(fs.readFileSync(path.join(__dirname, 'auth'), 'ascii'));
   var client = knox.createClient(auth);
 } catch (err) {
+  console.log(err);
   console.error('`make test` requires ./auth to contain a JSON string with');
   console.error('`key, secret, and bucket in order to run tests.');
   process.exit(1);
 }
 
-var jsonFixture = __dirname + '/fixtures/user.json';
+var jsonFixture = path.join(__dirname, 'fixtures', 'user.json');
 
-module.exports = {
-  'test .version': function(assert){
-    assert.match(knox.version, /^\d+\.\d+\.\d+$/);
-  },
-  
-  'test .createClient() invalid': function(assert){
+describe('Knox', function () {
+  it('has a valid version', function(done) {
+    assert.ok(/^\d+\.\d+\.\d+$/.exec(knox.version));
+    done();
+  })
+
+  it('fails to create invalid clients', function(done) {
     var err;
     try {
       knox.createClient({});
@@ -46,9 +50,10 @@ module.exports = {
       err = e;
     }
     assert.equal('aws "bucket" required', err.message);
-  },
+    done();
+  })
   
-  'test .createClient() valid': function(assert){
+  it('test .createClient() valid', function(done) {
     var client = knox.createClient({
         key: 'foobar'
       , secret: 'baz'
@@ -59,9 +64,10 @@ module.exports = {
     assert.equal('baz', client.secret);
     assert.equal('misc', client.bucket);
     assert.equal('s3.amazonaws.com', client.endpoint);
-  },
+    done();
+  })
   
-  'test .createClient() custom endpoint': function(assert){
+  it('test .createClient() custom endpoint', function(done) {
     var client = knox.createClient({
         key: 'foobar'
       , secret: 'baz'
@@ -70,21 +76,23 @@ module.exports = {
     });
 
     assert.equal('s3-eu-west-1.amazonaws.com', client.endpoint);
-  },
+    done();
+  })
 
-  'test .putFile()': function(assert, done){
+  it('test .putFile()', function(done) {
     var n = 0;
-    client.putFile(jsonFixture, '/test/user2.json', function(err, res){
+    client.putFile(jsonFixture, '/test/user2.json', function(err, res) {
       assert.ok(!err, 'putFile() got an error!');
       assert.equal(200, res.statusCode);
+
       client.get('/test/user2.json').on('response', function(res){
         assert.equal('application/json', res.headers['content-type']);
         done();
       }).end();
     });
-  },
+  })
   
-  'test .put()': function(assert, done){
+  it('test .put()', function(done) {
     var n = 0;
     fs.stat(jsonFixture, function(err, stat){
       if (err) throw err;
@@ -108,18 +116,18 @@ module.exports = {
         req.end(buf);
       })
     });
-  },
+  })
   
-  'test .putStream()': function(assert, done){
+  it('test .putStream()', function(done) {
     var stream = fs.createReadStream(jsonFixture);
     client.putStream(stream, '/test/user.json', function(err, res){
       assert.ok(!err);
       if (100 !== res.statusCode) assert.equal(200, res.statusCode);
       done();
     });
-  },
+  })
   
-  'test .getFile()': function(assert, done){
+  it('test .getFile()', function(done) {
     client.getFile('/test/user.json', function(err, res){
       assert.ok(!err);
       assert.equal(200, res.statusCode);
@@ -127,27 +135,27 @@ module.exports = {
       assert.equal(13, res.headers['content-length'])
       done();
     });
-  },
+  })
   
-  'test .get()': function(assert, done){
+  it('test .get()', function(done) {
     client.get('/test/user.json').on('response', function(res){
       assert.equal(200, res.statusCode);
       assert.equal('application/json', res.headers['content-type'])
       assert.equal(13, res.headers['content-length'])
       done();
     }).end();
-  },
-  
-  'test .head()': function(assert, done){
+  })
+
+  it('test .head()', function(done) {
     client.head('/test/user.json').on('response', function(res){
       assert.equal(200, res.statusCode);
       assert.equal('application/json', res.headers['content-type'])
       assert.equal(13, res.headers['content-length'])
       done();
     }).end();
-  },
+  })
   
-  'test .headFile()': function(assert, done){
+  it('test .headFile()', function(done) {
     client.headFile('/test/user.json', function(err, res){
       assert.ok(!err);
       assert.equal(200, res.statusCode);
@@ -155,34 +163,34 @@ module.exports = {
       assert.equal(13, res.headers['content-length'])
       done();
     });
-  },
+  })
   
-  'test .del()': function(assert, done){
+  it('test .del()', function(done) {
     client.del('/test/user.json').on('response', function(res){
       assert.equal(204, res.statusCode);
       done();
     }).end();
-  },
+  })
   
-  'test .deleteFile()': function(assert, done){
+  it('test .deleteFile()', function(done) {
     client.deleteFile('/test/user2.json', function(err, res){
       assert.ok(!err);
       assert.equal(204, res.statusCode);
       done();
     });
-  },
+  })
   
-  'test .get() 404': function(assert, done){
+  it('test .get() 404', function(done) {
     client.get('/test/user.json').on('response', function(res){
       assert.equal(404, res.statusCode);
       done();
     }).end();
-  },
+  })
   
-  'test .head() 404': function(assert, done){
+  it('test .head() 404', function(done) {
     client.head('/test/user.json').on('response', function(res){
       assert.equal(404, res.statusCode);
       done();
     }).end();
-  }
-};
+  })
+});
