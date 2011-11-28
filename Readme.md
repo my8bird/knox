@@ -5,15 +5,20 @@
 
 ## Features
 
-  - Not outdated :), developed for node 0.2.x
   - RESTful api (`client.get()`, `client.put()`, etc)
   - Uses node's crypto library (fast!, the others used native js)
   - Very node-like low-level request api via `http.Client`
   - Highly documented
 
+## Installation
+git clone git://github.com/my8bird/knox.git
+cd knox
+npm link
+
 ## Authors
 
   - TJ Holowaychuk ([visionmedia](http://github.com/visionmedia))
+  - Nathan Landis <my8bird@gmail.com>
 
 ## Examples
 

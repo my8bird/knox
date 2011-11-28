@@ -1,9 +1,7 @@
 
 test:
-	@./support/expresso/bin/expresso test/*.test.js \
-		--timeout 8000 \
-		--serial \
-		-I lib
+	@./node_modules/mocha/bin/mocha test/*.test.js \
+		--timeout 8000
 
 docs: index.html
 
