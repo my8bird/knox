@@ -3,7 +3,7 @@
  * Module dependencies.
  */
 
-var knox = require('knox')
+var knox = require('../index.js')
   , fs = require('fs');
 
 try {
