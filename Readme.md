@@ -9,6 +9,7 @@
   - Uses node's crypto library (fast!, the others used native js)
   - Very node-like low-level request api via `http.Client`
   - Highly documented
+  - High Level Helpers for common tasks (listBucket)
 
 ## Installation
 git clone git://github.com/my8bird/knox.git
@@ -108,6 +109,14 @@ Likewise we also have `client.deleteFile()` as a more concise (yet less flexible
 
     client.deleteFile('/test/Readme.md', function(err, res){
       // Logic
+    });
+
+## List Bucket Contents
+    knox.helpers.listBucket(client, function(err, contents) {
+       for (var i=0; i < contents.length; i++) {
+          var filename = contents[i];
+          console.log(filename);
+       }
     });
 
 ## Running Tests
