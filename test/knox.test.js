@@ -147,12 +147,14 @@ describe('Knox', function () {
   })
 
   it('.head()', function(done) {
-    client.head('/test/user.json').on('response', function(res){
+    call = client.head('/test/user.json')
+    call.on('response', function(res) {
       assert.equal(200, res.statusCode);
-      assert.equal('application/json', res.headers['content-type'])
-      assert.equal(13, res.headers['content-length'])
-      done();
-    }).end();
+      assert.equal('application/json', res.headers['content-type']);
+      assert.equal(13, res.headers['content-length']);
+    });
+    call.on('end', function() {done();});
+    call.end();
   })
   
   it('.headFile()', function(done) {
@@ -193,4 +195,5 @@ describe('Knox', function () {
       done();
     }).end();
   })
+
 });
